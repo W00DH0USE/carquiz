@@ -139,7 +139,7 @@ const myQuestions = [
 	},
 	{
 	 'question':"Which of the following can the Caparo T1 not do?",
-	 'answers': ["drive legally on the road", "drive through a tunnel upside down", "reach speeds of 60 mph (97 kph) in under two seconds.", "All of the above"],
+	 'answers': ["Drive legally on the road", "Drive through a tunnel upside down", "Reach speeds of 60 mph (97 kph) in under two seconds", "All of the above"],
 	 'correct':  2
 	},
 	{
