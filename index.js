@@ -81,6 +81,7 @@ function checkAnswer(answer){
 /* ---------- DISPLAY FEEDBACK WHEN CORRECT ANSWER GIVEN ---------- */
 function AnswerFeedbackCorrect () {
   $('.questionsForm').hide();
+  $('.answerFeedBackForm').show();
   $('.answerFeedBackForm').html(`
     <div class="correctFeedback">
       <p class="score js-score"> Score:  </p>
@@ -96,6 +97,7 @@ function AnswerFeedbackCorrect () {
 function AnswerFeedbackWrong () {
   let correctAnswer = `${myQuestions[current].correctAnswer}`;
   $('.questionsForm').hide();
+  $('.answerFeedBackForm').show();
   $('.answerFeedBackForm').html(`
     <div class="wrongFeedback">
       <p class="score js-score"> Score:  </p>
@@ -113,6 +115,7 @@ function renderNextQuestion () {
     console.log("Next button clicked");
     displayQuestion();
     $('.next').hide();
+    $('.answerFeedBackForm').hide();
     $('.submit').show();
   });
 }
