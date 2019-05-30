@@ -20,13 +20,24 @@ function displayQuestion(){
     <p class="question-number js-question-number">Question Number: ${current + 1}/10</p>
     <p class="score js-score"> Score: ${score} </p>
     <h2 class="question js-question">${listQuestion.question}</h2>
-    <ul class ="list js-list">
-      <li id="0"><p>${listQuestion.answers[0]}</p></li>
-      <li id="1"><p>${listQuestion.answers[1]}</p></li>
-      <li id="2"><p>${listQuestion.answers[2]}</p></li>
-      <li id="3"><p>${listQuestion.answers[3]}</p></li>
-    </ul>
-  
+    <form>
+      <label class="answerOption">
+      <input type="radio" id="0" name="answer" required>
+      <span class="answerOptionText">${listQuestion.answers[0]}</span>
+      </label>
+      <label class="answerOption">
+      <input type="radio" id="1" name="answer" required>
+      <span class="answerOptionText">${listQuestion.answers[1]}</span>
+      </label>
+      <label class="answerOption">
+      <input type="radio" id="2" name="answer" required>
+      <span class="answerOptionText">${listQuestion.answers[2]}</span>
+      </label>
+      <label class="answerOption">
+      <input type="radio" id="3" name="answer" required>
+      <span class="answerOptionText">${listQuestion.answers[3]}</span>
+      </label>
+    </form>
     <div class="submit">
         <button class="submit-button js-submit-button">Check Answer</button> 
     </div>
@@ -42,8 +53,8 @@ function displayQuestion(){
 /* ---------- SUBMIT BUTTON ---------- */
 function submitAnswer(){
   $(".js-submit-button").click(function(event){
-    if($('li.selected').length){
-      let answer = $('li.selected').attr('id');
+    if($('input.selected').length){
+      let answer = $('input.selected').attr('id');
       checkAnswer(answer);
       $('.next').show();
       $('.submit').hide();
@@ -59,11 +70,8 @@ function checkAnswer(answer){
   let answerCorrect = myQuestions[current].correct;
   if(listQuestion.correct == answer){
     score++;
-    $('li.selected').addClass('correct');
     AnswerFeedbackCorrect();
   } else {
-    $('li.selected').addClass('incorrect');
-    $('li#'+listQuestion.correct).addClass('correct');
     AnswerFeedbackWrong();
   }
   $('.js-score').text('Current Score: '+score);
@@ -96,7 +104,7 @@ function AnswerFeedbackWrong () {
       <button class="next-button js-next-button">Next</button> 
       </div>
     </div>`);
-    renderNextQuestion();
+  renderNextQuestion();
 }
 
 /* ---------- NEXT BUTTON ---------- */
@@ -108,12 +116,16 @@ function renderNextQuestion () {
     $('.submit').show();
   });
 }
-  
+
 /* ---------- HIGHLIGHT ANSWER SELECTED ---------- */
 function answerSelected(){
-  $('ul.list').on('click', 'li', function(event) {
+  $('form').on('click', 'input', function(event) {
     $('.selected').removeClass();
     $(this).addClass('selected');
+  });
+  $('form').on('click', 'label', function(event) {
+    $('.highlight').removeClass();
+    $(this).addClass('highlight');
   });
 }
 
