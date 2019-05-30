@@ -1,33 +1,46 @@
 
-/* ========================================================================== */
-/*   START QUIZ                                                              */
-/* ========================================================================== */
-
-
 let score = 0;
 let current = 0;
 
-/* ---------- QUIZ FUNCTIONS ---------- */
-$(document).ready(function(){
-    /* ---------- START QUIZ ---------- */
+/* ---------- START QUIZ ---------- */
+function startQuiz () {
   $(".js-start-button").click(function(){
-     $('.start-quiz').hide();
-     $('.next').hide();
-     $('.questions').show();
-     displayQuestion();
-      $('.js-score').text('Current Score: '+score);
+    $('.start-quiz').hide();
+    $('.questionsForm').show();
+    displayQuestion();
     console.log("Start Quiz button clicked");
   });
+}
+
+/* ---------- GENERATE QUESTIONS ---------- */
+function displayQuestion(){
+  if(current < myQuestions.length){
+    let listQuestion = myQuestions[current];
+    $('.questionsForm').html(`
+    <p class="question-number js-question-number">Question Number: ${current + 1}/10</p>
+    <p class="score js-score"> Score: ${score} </p>
+    <h2 class="question js-question">${listQuestion.question}</h2>
+    <ul class ="list js-list">
+      <li id="0"><p>${listQuestion.answers[0]}</p></li>
+      <li id="1"><p>${listQuestion.answers[1]}</p></li>
+      <li id="2"><p>${listQuestion.answers[2]}</p></li>
+      <li id="3"><p>${listQuestion.answers[3]}</p></li>
+    </ul>
   
-    /* ---------- NEXT BUTTON ---------- */
-  $(".js-next-button").click(function(event){
-    console.log("Next button clicked");
-    displayQuestion();
-    $('.next').hide();
-    $('.submit').show();
-  });
-  
-  /* ---------- SUBMIT BUTTON ---------- */
+    <div class="submit">
+        <button class="submit-button js-submit-button">Check Answer</button> 
+    </div>
+    `);
+    $('.questionsForm').show();
+    answerSelected();
+    submitAnswer();
+  } else {
+    displayEndResult();
+  }
+}
+
+/* ---------- SUBMIT BUTTON ---------- */
+function submitAnswer(){
   $(".js-submit-button").click(function(event){
     if($('li.selected').length){
       let answer = $('li.selected').attr('id');
@@ -38,34 +51,6 @@ $(document).ready(function(){
       alert('Please select an answer');
     }
   });
-  
-  /* ---------- RESTART QUIZ BUTTON ---------- */
-  $(".js-restart-button").click(function(){
-  location.reload();
-    console.log("Restart button clicked");
-  });
-  
-  /* ---------- ANSWER SELECTED ---------- */
-  $('ul.list').on('click', 'li', function(event) {
-    $('.selected').removeClass();
-    $(this).addClass('selected');
-  });
-  
-});
-
-/* ---------- GENERATE QUESTIONS ---------- */
-function displayQuestion(){
-  $('.js-question-number').text('Question Number: '+(current + 1)+"/10" );
-  if(current < myQuestions.length){
-    let listQuestion = myQuestions[current];
-    $('h2').text(listQuestion.question);
-    $('ul.list').html('');
-    for (let i = 0; i < listQuestion.answers.length; i++) {
-      $('ul.list').append('<li id = "'+i+'">'+listQuestion.answers[i] +'</li>');
-    }
-  } else {
-    displayScore();
-  }
 }
 
 /* ---------- CHECK ANSWER ---------- */
@@ -75,25 +60,97 @@ function checkAnswer(answer){
   if(listQuestion.correct == answer){
     score++;
     $('li.selected').addClass('correct');
+    AnswerFeedbackCorrect();
   } else {
     $('li.selected').addClass('incorrect');
     $('li#'+listQuestion.correct).addClass('correct');
+    AnswerFeedbackWrong();
   }
   $('.js-score').text('Current Score: '+score);
   current++;
 }
 
-/* ---------- UPDATE SCORE ---------- */
-function displayScore(){
-  $('.questions').hide();
-  $('.end-quiz').show();
-  $('.js-end-score').text("Your score is: " +score + '/10');
-  if(score >= 8){
-    $('.js-comment').text('GREAT JOB!');
-  } else {
-    $('.js-comment').text("YOU'LL DO BETTER NEXT TIME!");
-  }
+/* ---------- DISPLAY FEEDBACK WHEN CORRECT ANSWER GIVEN ---------- */
+function AnswerFeedbackCorrect () {
+  $('.questionsForm').hide();
+  $('.answerFeedBackForm').html(`
+    <div class="correctFeedback">
+      <p class="score js-score"> Score:  </p>
+      <h2 class="feedBackText">Congratulations!<br>You got it right!</h2>
+      <div class="next">
+      <button class="next-button js-next-button">Next</button> 
+      </div>
+    </div>`);
+    renderNextQuestion();
 }
+
+/* ---------- DISPLAY FEEDBACK WHEN WRONG ANSWER GIVEN ---------- */
+function AnswerFeedbackWrong () {
+  let correctAnswer = `${myQuestions[current].correctAnswer}`;
+  $('.questionsForm').hide();
+  $('.answerFeedBackForm').html(`
+    <div class="wrongFeedback">
+      <p class="score js-score"> Score:  </p>
+      <h2 class="feedBackText">You got it wrong<br>The correct answer is:<span> ${correctAnswer}</span></h2>
+      <div class="next">
+      <button class="next-button js-next-button">Next</button> 
+      </div>
+    </div>`);
+    renderNextQuestion();
+}
+
+/* ---------- NEXT BUTTON ---------- */
+function renderNextQuestion () {
+  $(".js-next-button").click(function(event){
+    console.log("Next button clicked");
+    displayQuestion();
+    $('.next').hide();
+    $('.submit').show();
+  });
+}
+  
+/* ---------- HIGHLIGHT ANSWER SELECTED ---------- */
+function answerSelected(){
+  $('ul.list').on('click', 'li', function(event) {
+    $('.selected').removeClass();
+    $(this).addClass('selected');
+  });
+}
+
+/* ---------- DISPLAY THE RESULTS AT THE END ---------- */
+function displayEndResult(){
+  $('.questionsForm').hide();
+  $('.resultsForm').show();
+  $('.answerFeedBackForm').hide();
+  if(score >= 8){
+    $('.resultsForm').html(`
+      <p class="end-score js-end-score">Your score is: ${score}/10</p>
+      <p class="comment">GREAT JOB!</p>
+      <button class="restart-button js-restart-button">RETAKE QUIZ</button>
+    `);
+  } else {
+    $('.resultsForm').html(`
+      <p class="end-score js-end-score">Your score is: ${score}/10</p>
+      <p class="comment">YOU'LL DO BETTER NEXT TIME!</p>
+      <button class="restart-button js-restart-button">RETAKE QUIZ</button>
+    `);
+  }
+  restartQuiz ()
+}
+
+/* ---------- RESTART QUIZ BUTTON ---------- */
+function restartQuiz () {
+  $(".js-restart-button").click(function(){
+  location.reload();
+    console.log("Restart button clicked");
+  });
+}
+
+function createQuiz () {
+  startQuiz();
+}
+
+$(createQuiz);
 
 
 /* ========================================================================== */
@@ -105,51 +162,61 @@ const myQuestions = [
 	{
 	 'question': 'Which supercar has 4 doors?',
 	 'answers': ["Bentley Continental GT Speed","Ferrari FF","Aston Martin Rapide","Ford GT"],
-	 'correct': 2
+   'correct': 2,
+   'correctAnswer': "Aston Martin Rapide"
 	},
 	{
 	 'question': 'How much horsepower does a 2012 Lamborghini Aventador have?',
 	 'answers': ["700", "800", "600", "500"],
-	 'correct':  0
+   'correct':  0,
+   'correctAnswer': "700"
 	},
 	{
 	 'question': "Which supercar has the quickest 0-60 time?",
 	 'answers': ["Bugatti Veyron","Ferrari LaFerrari","McLaren P1","Ariel Atom 3"],
-	 'correct':  3
+   'correct':  3,
+   'correctAnswer': "Ariel Atom 3"
 	},
 	{
 	'question': "What is the Ferrari Enzo is named after?",
 	'answers': ["The car's designer","The founder of Ferrari","The Italian town where the founder first raced","The Ferrari proving grounds (race track)"],
-	'correct':  1
+  'correct':  1,
+  'correctAnswer': "The founder of Ferrari"
 	},
 	{
 	'question': "Which supercar seats more that 2 occupants?",
   'answers': ["McLaren F1", "Koenigsegg CCX", "Ferrari Enzo" , "Porsche Carrera GT"],
-	'correct': 0
+  'correct': 0,
+  'correctAnswer': "McLaren F1"
 	},
 	{
 	 'question': "Which American supercar set a new top speed world record of 270.49 mph on February 14, 2014?",
 	 'answers': ["SSC Ultimate Aero","Mosler MT900","Hennessey Venom GT","SRT Viper Time Attack"],
-	 'correct': 2
+   'correct': 2,
+   'correctAnswer': "Hennessey Venom GT"
 	},
 	{
 	 'question':"The Bugatti Veyron burns how many gallons of gasoline each hour?",
 	 'answers': ["100", "40", "80", "20"],
-	 'correct': 2
+   'correct': 2,
+   'correctAnswer': "80"
 	},
 	{
 	 'question':"Which of the following can the Caparo T1 not do?",
 	 'answers': ["Drive legally on the road", "Drive through a tunnel upside down", "Reach speeds of 60 mph (97 kph) in under two seconds", "All of the above"],
-	 'correct':  2
+   'correct':  2,
+   'correctAnswer': "Reach speeds of 60 mph (97 kph) in under two seconds"
 	},
 	{
 	 'question':"Which German car manufacturer has owned Lamborghini since 1998?",
 	 'answers': ["BMW", "Audi", "Porsche", "Mercedes-Benz"],
-	 'correct': 1  
+   'correct': 1,
+   'correctAnswer': "Audi"
 	},
 	{
 	 'question': "Ford’s GT40 was conceived to beat Ferrari at Le Mans. It did so – but how many times did it win overall?",
 	 'answers': ["2", "3", "4", "5"],
-	 'correct': 2
+   'correct': 2,
+   'correctAnswer': "4"
 	}
 	];

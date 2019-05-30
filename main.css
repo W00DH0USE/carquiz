@@ -41,6 +41,7 @@ h1 {
   
 h2 {
     font-size: 100%;
+    margin: 35px 0;
 }
   
 h1, h2 {
@@ -70,6 +71,7 @@ button {
     color: #fff;
     border: .5px solid #fff;
     border-radius: 5px;
+    cursor: pointer;
 }
   
 .start-button {
@@ -81,7 +83,7 @@ button {
     width: 90px;
     border-radius: 50%;
     padding: 5px;
-    margin-top: 50px;
+    margin-top: 30px;
     cursor: pointer;
     transition: background-color 0.2s, border 0.2s, color 0.2s;
 }
@@ -122,7 +124,7 @@ button {
 /* ========================================================================== */
   
   
-.questions, .end-quiz {
+.questionsForm, .resultsForm {
     display: none;
     text-align: center;
     padding-bottom: 200px;
@@ -137,7 +139,7 @@ button {
     margin: 10px;
 }
   
-.question {
+.questionForm {
     margin: 30px auto 30px auto;
 }
   
@@ -153,6 +155,7 @@ li {
     font-size: 90%;
     border-radius: 5px;
     padding: 5px;
+    cursor: pointer;
 }
     
 .selected {
@@ -160,34 +163,37 @@ li {
     color:#fff;
 }
 
-/* ---------- FLASHING CORRECT ANSWER ---------- */
-.correct {
-    background-color: green;
-    animation-name: flash;
-	animation-duration: 1s;
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
+
+/* ========================================================================== */
+/*   FEEDBACK FORM                                                            */
+/* ========================================================================== */
+
+
+.correctFeedback {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 40px
 }
 
-@keyframes flash {  
-    0% { opacity: 1.0; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1.0; }
+.wrongFeedback {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 40px
 }
-  
-.incorrect {
-    background-color: red;
+
+.feedBackText {
+    margin: 20px 0;
 }
-  
   
 /* ========================================================================== */
 /*   RESULTS FORM                                                             */
 /* ========================================================================== */
   
   
-.end-quiz {
-    padding-top: 80px;
-    height: 100px;
+.resultsForm {
+    padding-top: 40px;
     font-size: 150%;
     color: #b5b5b5;
 }
@@ -220,11 +226,3 @@ li {
         height: 30px;
     }
 }
-
-/* ---------- FLASHING CORRECT ANSWER ---------- */
-@media (prefers-reduced-motion: reduce) {
-    .correct {
-      animation: none;
-      -webkit-animation: none;
-    }
-  }
